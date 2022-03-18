@@ -1,3 +1,25 @@
+use anyhow::Result;
+use std::{thread::sleep, time::Duration};
+
+use flutter_rust_bridge::StreamSink;
+
+const ONE_SECOND: Duration = Duration::from_secs(1);
+
+// can't omit the return type yet, this is a bug
+pub fn tick(sink: StreamSink<i32>) -> Result<()> {
+    let mut ticks = 0;
+    loop {
+        sink.add(ticks);
+        sleep(ONE_SECOND);
+        if ticks == i32::MAX {
+            break;
+        }
+        ticks += 1;
+    }
+    Ok(())
+}
+
+
 pub enum Platform {
     Unknown,
     Android,
@@ -7,6 +29,19 @@ pub enum Platform {
     MacIntel,
     MacApple,
     Wasm,
+}
+pub enum ConnectionStatus {
+    Connected,
+    Disconnected,
+    Connecting,
+}
+pub fn connect(info: ConnectionInfo){
+
+
+}
+pub struct ConnectionInfo {
+    pub port: u16,
+    pub url: String,
 }
 
 pub fn platform() -> Platform {
